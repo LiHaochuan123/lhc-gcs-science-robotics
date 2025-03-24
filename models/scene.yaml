@@ -1,0 +1,146 @@
+directives:
+
+# Add iiwa
+- add_model:
+    name: iiwa
+    file: package://drake_models/iiwa_description/urdf/iiwa14_spheres_collision.urdf
+
+- add_weld:
+    parent: world
+    child: iiwa::base
+
+# Add schunk
+- add_model:
+    name: wsg
+    file: package://drake_models/wsg_50_description/sdf/schunk_wsg_50_welded_fingers.sdf
+
+- add_frame:
+    name: iiwa::wsg_attach
+    X_PF:
+      base_frame: iiwa::iiwa_link_7
+      translation: [0, 0, 0.114]
+      rotation: !Rpy { deg: [90.0, 0.0, 0.0 ]}
+
+- add_weld:
+    parent: iiwa::wsg_attach
+    child: wsg::body
+
+# Add stick1
+- add_model:
+    name: stick1
+    file: package://gcs/models/stick/stick.sdf
+
+- add_frame:
+    name: stick1_origin
+    X_PF:
+      base_frame: world
+      translation: [0.5, 0, 0.5]
+
+- add_weld:
+    parent: stick1_origin
+    child: stick1::Robot
+
+# Add stick2
+- add_model:
+    name: stick2
+    file: package://gcs/models/stick/stick.sdf
+
+- add_frame:
+    name: stick2_origin
+    X_PF:
+      base_frame: world
+      translation: [0, 0.5, 0.5]
+
+- add_weld:
+    parent: stick2_origin
+    child: stick2::Robot
+
+# Add stick3
+- add_model:
+    name: stick3
+    file: package://gcs/models/stick/stick.sdf
+
+- add_frame:
+    name: stick3_origin
+    X_PF:
+      base_frame: world
+      translation: [-0.5, 0, 0.5]
+
+- add_weld:
+    parent: stick3_origin
+    child: stick3::Robot
+
+# Add stick4
+- add_model:
+    name: stick4
+    file: package://gcs/models/stick/stick.sdf
+
+- add_frame:
+    name: stick4_origin
+    X_PF:
+      base_frame: world
+      translation: [0, -0.5, 0.5]
+
+- add_weld:
+    parent: stick4_origin
+    child: stick4::Robot
+
+# Add stick5
+- add_model:
+    name: stick5
+    file: package://gcs/models/stick/stick.sdf
+
+- add_frame:
+    name: stick5_origin
+    X_PF:
+      base_frame: world
+      translation: [0.35, 0.35, 0.5]
+
+- add_weld:
+    parent: stick5_origin
+    child: stick5::Robot
+
+# Add stick6
+- add_model:
+    name: stick6
+    file: package://gcs/models/stick/stick.sdf
+
+- add_frame:
+    name: stick6_origin
+    X_PF:
+      base_frame: world
+      translation: [0.35, -0.35, 0.5]
+
+- add_weld:
+    parent: stick6_origin
+    child: stick6::Robot
+
+# Add stick7
+- add_model:
+    name: stick7
+    file: package://gcs/models/stick/stick.sdf
+
+- add_frame:
+    name: stick7_origin
+    X_PF:
+      base_frame: world
+      translation: [-0.35, -0.35, 0.5]
+
+- add_weld:
+    parent: stick7_origin
+    child: stick7::Robot
+
+# Add stick8
+- add_model:
+    name: stick8
+    file: package://gcs/models/stick/stick.sdf
+
+- add_frame:
+    name: stick8_origin
+    X_PF:
+      base_frame: world
+      translation: [-0.35, 0.35, 0.5]
+
+- add_weld:
+    parent: stick8_origin
+    child: stick8::Robot

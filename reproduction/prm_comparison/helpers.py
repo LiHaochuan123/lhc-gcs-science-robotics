@@ -1,3 +1,4 @@
+from os import name
 from typing import Sequence, List, Union, Optional
 import matplotlib.pyplot as plt
 import numpy as np
@@ -5,7 +6,7 @@ import pandas as pd
 
 from pydrake.systems.framework import DiagramBuilder
 from pydrake.multibody.plant import AddMultibodyPlantSceneGraph, MultibodyPlant
-from pydrake.multibody.parsing import LoadModelDirectives, Parser, ProcessModelDirectives
+from pydrake.multibody.parsing import LoadModelDirectives, Parser, ProcessModelDirectives, AddModel, AddModelInstance
 from pydrake.common import FindResourceOrThrow
 from pydrake.geometry import (IllustrationProperties, MeshcatVisualizer,
                               MeshcatVisualizerParams, Rgba, RoleAssign, Role,
@@ -121,9 +122,9 @@ def set_transparency_of_models(plant, model_instances, alpha, scene_graph):
             for geometry_id in inspector.GetGeometries(frame_id,
                                                        Role.kIllustration):
                 properties = inspector.GetIllustrationProperties(geometry_id)
-                phong = properties.GetProperty("phong", "diffuse")
-                phong.set(phong.r(), phong.g(), phong.b(), alpha)
-                properties.UpdateProperty("phong", "diffuse", phong)
+                phong = properties.AddProperty("phong", "diffuse",Rgba(0.5,0.5,0.5,0.5))
+                # phong.set(phong.r(), phong.g(), phong.b(), alpha)
+                # properties.UpdateProperty("phong", "diffuse", phong)
                 scene_graph.AssignRole(plant.get_source_id(), geometry_id,
                                        properties, RoleAssign.kReplace)
 
@@ -251,16 +252,15 @@ def visualize_trajectory(meshcat,
 
     # Add static configurations of the iiwa for visalization.
     if robot_configurations is not None:
-        iiwa_file = FindResourceOrThrow(
-            "drake/manipulation/models/iiwa_description/urdf/iiwa14_spheres_collision.urdf"
-        )
-        wsg_file = FindModelFile("models/schunk_wsg_50_welded_fingers.sdf")
-
+        iiwa_file = "package://drake_models/iiwa_description/urdf/iiwa14_spheres_collision.urdf"
+        wsg_file = "package://drake_models/wsg_50_description/sdf/schunk_wsg_50_welded_fingers.sdf"
         for i, q in enumerate(robot_configurations):
             # Add iiwa and wsg for visualization.
-            new_iiwa = parser.AddModelFromFile(iiwa_file, f"vis_iiwa_{i}")
-            new_wsg = parser.AddModelFromFile(wsg_file, f"vis_wsg_{i}")
-
+            # parser.SetAutoRenaming(True)
+            [new_iiwa] = parser.AddModelsFromUrl(iiwa_file)
+            [new_wsg] = parser.AddModelsFromUrl(wsg_file)
+            plant.RenameModelInstance(new_iiwa, f"vis_iiwa_{i}")
+            plant.RenameModelInstance(new_wsg, f"vis_wsg_{i}")
             # Weld iiwa to the world frame.
             plant.WeldFrames(plant.world_frame(),
                              plant.GetFrameByName("base", new_iiwa),

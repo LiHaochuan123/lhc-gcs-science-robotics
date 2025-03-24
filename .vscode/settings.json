@@ -1,0 +1,11 @@
+{
+    "python.analysis.extraPaths": [
+        "~/opt/drake-build/install/lib/python3.10/site-packages"
+    ],
+    "python.autoComplete.extraPaths": [
+        "~/opt/drake-build/install/lib/python3.10/site-packages"
+    ],
+    "jupyter.notebookFileRoot": "${workspaceFolder}",
+    "python.analysis.autoImportCompletions": true,
+    "ros.distro": "humble"
+}
